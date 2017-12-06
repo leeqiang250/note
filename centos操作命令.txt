@@ -1,3 +1,14 @@
+vps配置
+IP：98.142.137.220
+管理登录密码：leeqiang250
+ssh端口:27622
+ssh密码：dwuCnrzSU64Q
+ss端口：443
+ss密码：NzJlNjQ0Yj
+ss代理端口：1080
+
+
+
 切换root用户
 su root
 
