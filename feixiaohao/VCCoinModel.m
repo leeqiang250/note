@@ -45,8 +45,9 @@
     return [self.class propertyKeys];
 }
 
-
-- (void)ddd:(NSDictionary *)dic {
+- (void)ref:(NSDictionary *)dic {
+    self.uid = [dic objectForKey:@"code"];
+    self.代码 = [dic objectForKey:@"code"];
     self.当前价 = [dic objectForKey:@"current_price_usd"];
     self.中文 = [dic objectForKey:@"fullname"];
     self.名字 = [dic objectForKey:@"name"];
@@ -58,9 +59,6 @@
     self.成交量24 = [dic objectForKey:@"vol_usd"];
     self.流通量 = [dic objectForKey:@"supply"];
     self.涨跌幅24 = [dic objectForKey:@"change_percent"];
-    
-    
-    
 }
 
 @end
