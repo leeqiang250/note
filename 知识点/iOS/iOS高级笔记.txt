@@ -1,0 +1,63 @@
+register read x0
+register read x1
+register read x7
+
+objc_mshSend
+打断点，system断电，alloc
+函数的参数可以指定默认值
+
+
+编译器的优化
+init是干嘛呢？是返回本身
+new=[[class alloc] init]
+其实init设计的目的就是让开发者重写的，例如initWith。
+
+
+Xcode工程配置中可以选择优化等级
+汇编函数的行数直接等于运行速度。
+CPU每放一次电，读取一行。
+
+
+一个OC对象需要多少内存空间？
+和属性有关系
+和父类有关系
+一个OC对象占用空间最小16字节
+
+关于对齐
+1.为了速度
+2.为了安全（有的CPU只能从偶数开始读，奇数读可能出错）
+0x00aa00 null
+0x00aa01 int
+0x00aa02 int
+0x00aa03 int
+0x00aa04 int
+0x00aa05 int
+0x00aa06 int
+
+计算按8对齐
+int func(int x) {
+	return (x + 7) >> 3 << 3;
+}
+
+开辟内存
+对象内部的数据需要的大小，8字节对齐
+基本数据类型，int，double
+
+calloc函数内部对size是16字节对齐
+
+
+读取内存
+memory read p=x p
+
+CPU架构
+		数据总线						寄存器   寻址能力 
+32位		32根（一次通电传递32个0或1）						iOS 5C之前
+64位		64根（一次通电传递64个0或1）						iOS 5S开始
+
+
+
+《objective-c的高级编程》
+《程序员的自我修养》
+
+
+1900009930（小燕子老师QQ）

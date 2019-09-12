@@ -1,0 +1,24 @@
+quit
+
+breakpoint list
+breakpoint disable 1
+breakpoint enable 1
+
+thread step-in
+thread step-over
+thread step-out
+thread step-inst
+thread step-over-ins
+thread list
+thread backtrace
+
+expression 变量
+frame variable 变量
+expression 变量 = 10
+expression printf("execute function %i",a)
+
+po 变量
+p 变量
+
+register read
+x 内存地址

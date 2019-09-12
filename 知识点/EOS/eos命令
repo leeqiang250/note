@@ -1,0 +1,25 @@
+./nodeos -e -p eosio --plugin eosio::chain_api_plugin --plugin eosio::history_api_plugin
+./nodeos -e -p eosio --plugin eosio::chain_api_plugin --plugin eosio::history_api_plugin --hard-replay-blockchain
+./nodeos -e -p eosio --plugin eosio::wallet_api_plugin --plugin eosio::chain_api_plugin --plugin eosio::history_api_plugin --hard-replay-blockchain
+
+./nodeos -e -p eosio --plugin eosio::mongo_db_plugin --plugin eosio::chain_api_plugin --plugin eosio::history_api_plugin --hard-replay-blockchain
+./nodeos -e -p eosio --plugin eosio::chain_api_plugin --plugin eosio::history_api_plugin --plugin eosio::mongo_db_plugin --hard-replay-blockchain
+
+./nodeos -e -p eosio --plugin eosio::chain_api_plugin --plugin eosio::history_api_plugin --resync-blockchain
+
+./nodeos -e -p eosio --plugin eosio::wallet_api_plugin --plugin eosio::chain_api_plugin --plugin eosio::history_api_plugin
+命令行后面加 --resync-blockchain
+
+
+
+killall nodeos cleos keosd
+killall cleos
+killall keosd
+
+
+瑞松，问个问题。
+我通过编辑脚本编译的./bulid，能正常启动。
+我通过Clion调试编译的./cmake-build-debug，在program arguments中填入启动参数./nodeos -e -p eosio --plugin eosio::chain_api_plugin --plugin eosio::history_api_plugin --hard-replay-blockchain，每次都报错。
+
+
+
