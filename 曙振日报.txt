@@ -1,0 +1,91 @@
+预发环境
+https://beta-appapi.wbfex.info:32004
+https://beta-cms.wbfex.info:32004
+
+https://beta-motc.wbfex.info:32004
+https://beta-openapi.wbfex.info:32004
+
+https://beta-otcapi.wbfex.info:32004
+https://beta-otcappapi.wbfex.info:32004
+https://beta-sapi.wbfex.info:32004
+https://beta-webapi.wbfex.info:32004
+https://beta-ws2.wbfex.info:32004
+
+https://beta-m.wbfex.info:32004
+https://beta-pre.wbfex.info:32004
+https://beta-otc.wbfex.info:32004
+
+https://beta-pre.wbfex.info:32004
+
+
+Callable
+https://www.cnblogs.com/syp172654682/p/9788051.html
+Lists.transform(CoinSymbolUtils.getOpenCoinSymbol(), new Function<ConfigCoinSymbol, String>() {
+
+
+
+
+ps -ef | grep  wbfex
+yum install lsof
+ls /proc/进程ID/fd -l | grep socket: | wc -l
+
+netstat -anp tcp | grep 8151
+netstat -anp tcp | grep 8152
+netstat -anp tcp | grep 8153
+netstat -anp tcp | grep 8154
+netstat -anp tcp | grep 8155
+netstat -anp tcp | grep 8151 | awk '{print $6}' | sort | uniq -c  | sort -nr
+
+
+netstat -ant | grep ":8152" | awk '{print $6}' | sort | uniq -c  | sort -nr
+netstat -ant | grep ":3306" | awk '{print $6}' | sort | uniq -c  | sort -nr
+ss -lsntp
+lsof -i | grep 进程ID
+lsof -iTCP
+
+
+实际内存占用：ps -e -o 'pid,comm,args,pcpu,rsz,vsz,stime,user,uid'
+
+syn0306
+
+CLOSE_WAIT
+TIME_WAIT
+
+
+
+
+
+/usr/local/redis-cluster/redis-5.0.5/src/redis-server /usr/local/redis-cluster/7001/redis.conf
+/usr/local/redis-cluster/redis-5.0.5/src/redis-server /usr/local/redis-cluster/7002/redis.conf
+/usr/local/redis-cluster/redis-5.0.5/src/redis-server /usr/local/redis-cluster/7003/redis.conf
+/usr/local/redis-cluster/redis-5.0.5/src/redis-server /usr/local/redis-cluster/7004/redis.conf
+/usr/local/redis-cluster/redis-5.0.5/src/redis-server /usr/local/redis-cluster/7005/redis.conf
+/usr/local/redis-cluster/redis-5.0.5/src/redis-server /usr/local/redis-cluster/7006/redis.conf
+
+ps -ef | grep redis
+ps -A | grep redis
+
+/usr/local/redis-cluster/redis-5.0.5/src/redis-cli --cluster create 127.0.0.1:7001 127.0.0.1:7002 127.0.0.1:7003 127.0.0.1:7004 127.0.0.1:7005 127.0.0.1:7006 -a test123
+
+/usr/local/redis-cluster/redis-5.0.5/src/redis-cli -p 7001 -a test123 shutdown
+/usr/local/redis-cluster/redis-5.0.5/src/redis-cli -p 7002 -a test123 shutdown
+/usr/local/redis-cluster/redis-5.0.5/src/redis-cli -p 7003 -a test123 shutdown
+/usr/local/redis-cluster/redis-5.0.5/src/redis-cli -p 7004 -a test123 shutdown
+/usr/local/redis-cluster/redis-5.0.5/src/redis-cli -p 7005 -a test123 shutdown
+/usr/local/redis-cluster/redis-5.0.5/src/redis-cli -p 7006 -a test123 shutdown
+
+/usr/local/redis-cluster/redis-5.0.5/src/redis-cli -p 7001 -a test123
+/usr/local/redis-cluster/redis-5.0.5/src/redis-cli -h 192.168.11.92 -p 7001 -a add006461ca7dc55c93efe2e528edf1b
+set name "liqiang"
+get name
+exit
+
+auth "root"
+
+/usr/local/redis-cluster/redis04/bin/redis-cli -p 7001 -a add006461ca7dc55c93efe2e528edf1b
+./redis-cli -p 7001 -a add006461ca7dc55c93efe2e528edf1b
+
+/usr/local/redis-cluster/redis04/bin/redis-cli -h 172.31.9.111 -a add006461ca7dc55c93efe2e528edf1b
+
+
+/usr/local/redis-cluster/redis04/bin/redis-server -p 7001 -a add006461ca7dc55c93efe2e528edf1b
