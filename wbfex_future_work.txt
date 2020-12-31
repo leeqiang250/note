@@ -1,0 +1,32 @@
+未完成
+gateway启动内存较高
+gateway压测
+
+已完成
+quot-x offet优化
+quot-x 盘口数据结构改成链表
+
+
+
+ssh-add -K /Users/liqiang/.ssh/id_rsa_phabricator_future
+
+ssh liqiang@jumpserver.wbfutures.xyz -p 2222
+@QLI9tOo!Iu@VLd(
+
+offset与source绑定
+
+-1
+-2
+-3
+
+
+
+
+
+为了方便炒币，我找了些数据，有一个分享给大家，当个观点。
+
+
+
+主体					营收/交易额（亿人民币）	净利润（亿人民币）	按A股净利润排名
+阿里巴巴（2020财年）	5097				1492			约第5名
+币安交易所（2020年）	110000				60				约第100名

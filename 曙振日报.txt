@@ -27,7 +27,10 @@ Lists.transform(CoinSymbolUtils.getOpenCoinSymbol(), new Function<ConfigCoinSymb
 
 ps -ef | grep  wbfex
 yum install lsof
+cat /proc/version
 ls /proc/进程ID/fd -l | grep socket: | wc -l
+
+lsof -i :8151
 
 netstat -anp tcp | grep 8151
 netstat -anp tcp | grep 8152
@@ -89,3 +92,16 @@ auth "root"
 
 
 /usr/local/redis-cluster/redis04/bin/redis-server -p 7001 -a add006461ca7dc55c93efe2e528edf1b
+
+
+
+
+
+
+
+clearing.result
+{"command":{"type":"config.time"},"seq":83143645,"ts":1608108926}
+
+jstack -l 3348 > /Users/liqiang/Desktop/info
+
+java -jar -DAPP_NAME=ws-gateway-x -DENV=local -DPROFILE=local -Dspring.cloud.config.enabled=false ./gateway-x-websocket-0.0.1-SNAPSHOT.jar > gateway.log &

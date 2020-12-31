@@ -1,0 +1,32 @@
+htop
+top -H -p 4792
+
+pstree -p 13520 | wc -l
+ps -Lf 13520 | wc -l
+ps -eLo pid,stat
+ps -eLo pid,stat | grep 13520 | grep running | wc -l
+
+jstack 11370 > /Users/liqiang/Desktop/11370.log
+jstack -F 11370 > /Users/liqiang/Desktop/11370.log
+jps -l
+jinfo 14099
+jmap 14099
+jmap -dump:format=b,file=/Users/liqiang/Desktop/14099.log 14099
+jstat -class 14099
+jstat -compiler 14099
+jstat -gc 14099
+jstat -gccapacity 14099
+jstat -gcnew 14099
+jstat -gcnewcapacity 14099
+jmap -heap 14099
+jmap -histo 14099
+
+
+df
+df -h
+stat 14099.log
+sleep 5s
+free -s 1
+netstat -l
+
+printf %x 8627
