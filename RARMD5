@@ -1,0 +1,25 @@
+RARMD5
+
+
+
+downloadRAR
+
+getTask
+
+taskStartTs
+
+completeTask
+
+discoverKey
+group=xxxx&key=12345
+
+
+
+fileInfoList,err := ioutil.ReadDir(pwd)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(len(fileInfoList))
+	for i := range fileInfoList {
+		fmt.Println(fileInfoList[i].Name())  //打印当前文件或目录下的文件或目录名
+	}
