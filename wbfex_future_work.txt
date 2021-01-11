@@ -5,6 +5,13 @@ quote-x支持多数据源，offset与source绑定
 移除clear等指令
 quote-x：修补k线
 01-15：图灵上线
+ticker不更新（超过24小时）
+交易对的可见时间()
+
+
+
+
+
 
 已完成
 quote-x offet优化
@@ -25,8 +32,17 @@ ssh-add -K /Users/liqiang/.ssh/id_rsa_phabricator_future
 ssh liqiang@jumpserver.wbfutures.xyz -p 2222
 @QLI9tOo!Iu@VLd(
 
-
+22-7=15
 
 -1
 -2
 -3
+
+ssh://git@phabricator.wbfutures.xyz:2222/diffusion/34/gateway-x.git
+
+spring.cloud.config.enabled false
+PROFILE local
+ENV local
+APP_NAME ws-gateway-x
+
+SAF123sdf@32

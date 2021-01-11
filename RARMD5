@@ -1,5 +1,6 @@
 RARMD5
 
+__
 
 
 downloadRAR
@@ -23,3 +24,21 @@ fileInfoList,err := ioutil.ReadDir(pwd)
 	for i := range fileInfoList {
 		fmt.Println(fileInfoList[i].Name())  //打印当前文件或目录下的文件或目录名
 	}
+
+
+
+
+1、长度，长度范围
+2、包含哪些（顺序）
+3、不包含哪些
+4、中文、英文
+
+
+
+~!@#$%^&*()_+-=`1234567890
+qwertyuiopQWERTYUIOP[]\{}|
+asdfghjklASDFGHJKL;':"
+zxcvbnm,./<>?ZXCVBNM
+
+
+
