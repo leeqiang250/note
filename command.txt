@@ -30,3 +30,9 @@ free -s 1
 netstat -l
 
 printf %x 8627
+
+
+
+ls -l | grep "^-" | wc -l
+ls -lR| grep "^-" | wc -l
+ls -lR | grep "^d" | wc -l
