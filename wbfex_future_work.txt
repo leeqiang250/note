@@ -26,17 +26,22 @@ quote-x 盘口数据结构改成链表
 再往下就是 sdk，包含其他模块的http接口
 
 
+test分支测试指令，id：2
+
 
 ssh-add -K /Users/liqiang/.ssh/id_rsa_phabricator_future
 
 ssh liqiang@jumpserver.wbfutures.xyz -p 2222
-@QLI9tOo!Iu@VLd(
+@1Q2w3e4r
 
-22-7=15
+RC_T3433
 
 -1
 -2
 -3
+
+
+APP_NAME=ws-gateway-x;ENV=test-1;PROFILE=test-1;spring.cloud.config.enabled=true;CONFIG_SERVER=http://conf-x.wbfutures.cc;x.gateway.source.match.enable=false;x.gateway.source.repl.enable=true;x.gateway.source.clearing.enable=false;logback.kafka.enable=false;logging.config=/Users/yim/Dev/code/x/gateway-x/gateway-x-project/gateway-x-bootstrap/src/main/resources/logback-local.xml
 
 ssh://git@phabricator.wbfutures.xyz:2222/diffusion/34/gateway-x.git
 
@@ -46,3 +51,27 @@ ENV local
 APP_NAME ws-gateway-x
 
 SAF123sdf@32
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ticker
+-2
+-3
+
+depth
+-2
+-3
+
+line

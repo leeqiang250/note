@@ -29,16 +29,58 @@ fileInfoList,err := ioutil.ReadDir(pwd)
 
 
 1、长度，长度范围
+
 2、包含哪些（顺序）
+
 3、不包含哪些
+
 4、中文、英文
 
 
 
-~!@#$%^&*()_+-=`1234567890
-qwertyuiopQWERTYUIOP[]\{}|
-asdfghjklASDFGHJKL;':"
-zxcvbnm,./<>?ZXCVBNM
+*2 502398
+*4 
+
+
+
+挖矿
+调度
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+~!@#$%^&*()_+-=`1234567890qwertyuiopQWERTYUIOP[]\{}|asdfghjklASDFGHJKL;':"zxcvbnm,./<>?ZXCVBNM
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
