@@ -1,5 +1,5 @@
 /**
- *Submitted for verification at Etherscan.io on 2021-04-23
+ *Submitted for verification at Etherscan.io on 2021-03-15
 */
 
 // File: contracts/lib/InitializableOwnable.sol
@@ -91,6 +91,7 @@ contract FeeRateModel is InitializableOwnable {
 
 // File: contracts/intf/IERC20.sol
 
+
 /**
  * @dev Interface of the ERC20 standard as defined in the EIP.
  */
@@ -162,7 +163,6 @@ interface IERC20 {
 }
 
 // File: contracts/lib/SafeMath.sol
-
 
 
 /**
@@ -256,6 +256,106 @@ library DecimalMath {
 
     function reciprocalCeil(uint256 target) internal pure returns (uint256) {
         return uint256(10**36).divCeil(target);
+    }
+}
+
+// File: contracts/lib/SafeERC20.sol
+
+/**
+ * @title SafeERC20
+ * @dev Wrappers around ERC20 operations that throw on failure (when the token
+ * contract returns false). Tokens that return no value (and instead revert or
+ * throw on failure) are also supported, non-reverting calls are assumed to be
+ * successful.
+ * To use this library you can add a `using SafeERC20 for ERC20;` statement to your contract,
+ * which allows you to call the safe operations as `token.safeTransfer(...)`, etc.
+ */
+library SafeERC20 {
+    using SafeMath for uint256;
+
+    function safeTransfer(
+        IERC20 token,
+        address to,
+        uint256 value
+    ) internal {
+        _callOptionalReturn(token, abi.encodeWithSelector(token.transfer.selector, to, value));
+    }
+
+    function safeTransferFrom(
+        IERC20 token,
+        address from,
+        address to,
+        uint256 value
+    ) internal {
+        _callOptionalReturn(
+            token,
+            abi.encodeWithSelector(token.transferFrom.selector, from, to, value)
+        );
+    }
+
+    function safeApprove(
+        IERC20 token,
+        address spender,
+        uint256 value
+    ) internal {
+        // safeApprove should only be called when setting an initial allowance,
+        // or when resetting it to zero. To increase and decrease it, use
+        // 'safeIncreaseAllowance' and 'safeDecreaseAllowance'
+        // solhint-disable-next-line max-line-length
+        require(
+            (value == 0) || (token.allowance(address(this), spender) == 0),
+            "SafeERC20: approve from non-zero to non-zero allowance"
+        );
+        _callOptionalReturn(token, abi.encodeWithSelector(token.approve.selector, spender, value));
+    }
+
+    /**
+     * @dev Imitates a Solidity high-level call (i.e. a regular function call to a contract), relaxing the requirement
+     * on the return value: the return value is optional (but if data is returned, it must not be false).
+     * @param token The token targeted by the call.
+     * @param data The call data (encoded using abi.encode or one of its variants).
+     */
+    function _callOptionalReturn(IERC20 token, bytes memory data) private {
+        // We need to perform a low level call here, to bypass Solidity's return data size checking mechanism, since
+        // we're implementing it ourselves.
+
+        // A Solidity high level call has three parts:
+        //  1. The target address is checked to verify it contains contract code
+        //  2. The call itself is made, and success asserted
+        //  3. The return value is decoded, which in turn checks the size of the returned data.
+        // solhint-disable-next-line max-line-length
+
+        // solhint-disable-next-line avoid-low-level-calls
+        (bool success, bytes memory returndata) = address(token).call(data);
+        require(success, "SafeERC20: low-level call failed");
+
+        if (returndata.length > 0) {
+            // Return data is optional
+            // solhint-disable-next-line max-line-length
+            require(abi.decode(returndata, (bool)), "SafeERC20: ERC20 operation did not succeed");
+        }
+    }
+}
+
+// File: contracts/lib/ReentrancyGuard.sol
+
+
+/**
+ * @title ReentrancyGuard
+ * @author DODO Breeder
+ *
+ * @notice Protect functions from Reentrancy Attack
+ */
+contract ReentrancyGuard {
+    // https://solidity.readthedocs.io/en/latest/control-structures.html?highlight=zero-state#scoping-and-declarations
+    // zero-state of _ENTERED_ is false
+    bool private _ENTERED_;
+
+    modifier preventReentrant() {
+        require(!_ENTERED_, "REENTRANT");
+        _ENTERED_ = true;
+        _;
+        _ENTERED_ = false;
     }
 }
 
@@ -451,7 +551,6 @@ library DODOMath {
 }
 
 // File: contracts/lib/PMMPricing.sol
-
 
 
 /**
@@ -696,118 +795,17 @@ library PMMPricing {
     }
 }
 
-// File: contracts/lib/SafeERC20.sol
+// File: contracts/DODOVendingMachine/impl/DVMStorage.sol
 
 
 
-/**
- * @title SafeERC20
- * @dev Wrappers around ERC20 operations that throw on failure (when the token
- * contract returns false). Tokens that return no value (and instead revert or
- * throw on failure) are also supported, non-reverting calls are assumed to be
- * successful.
- * To use this library you can add a `using SafeERC20 for ERC20;` statement to your contract,
- * which allows you to call the safe operations as `token.safeTransfer(...)`, etc.
- */
-library SafeERC20 {
+contract DVMStorage is ReentrancyGuard {
     using SafeMath for uint256;
 
-    function safeTransfer(
-        IERC20 token,
-        address to,
-        uint256 value
-    ) internal {
-        _callOptionalReturn(token, abi.encodeWithSelector(token.transfer.selector, to, value));
-    }
-
-    function safeTransferFrom(
-        IERC20 token,
-        address from,
-        address to,
-        uint256 value
-    ) internal {
-        _callOptionalReturn(
-            token,
-            abi.encodeWithSelector(token.transferFrom.selector, from, to, value)
-        );
-    }
-
-    function safeApprove(
-        IERC20 token,
-        address spender,
-        uint256 value
-    ) internal {
-        // safeApprove should only be called when setting an initial allowance,
-        // or when resetting it to zero. To increase and decrease it, use
-        // 'safeIncreaseAllowance' and 'safeDecreaseAllowance'
-        // solhint-disable-next-line max-line-length
-        require(
-            (value == 0) || (token.allowance(address(this), spender) == 0),
-            "SafeERC20: approve from non-zero to non-zero allowance"
-        );
-        _callOptionalReturn(token, abi.encodeWithSelector(token.approve.selector, spender, value));
-    }
-
-    /**
-     * @dev Imitates a Solidity high-level call (i.e. a regular function call to a contract), relaxing the requirement
-     * on the return value: the return value is optional (but if data is returned, it must not be false).
-     * @param token The token targeted by the call.
-     * @param data The call data (encoded using abi.encode or one of its variants).
-     */
-    function _callOptionalReturn(IERC20 token, bytes memory data) private {
-        // We need to perform a low level call here, to bypass Solidity's return data size checking mechanism, since
-        // we're implementing it ourselves.
-
-        // A Solidity high level call has three parts:
-        //  1. The target address is checked to verify it contains contract code
-        //  2. The call itself is made, and success asserted
-        //  3. The return value is decoded, which in turn checks the size of the returned data.
-        // solhint-disable-next-line max-line-length
-
-        // solhint-disable-next-line avoid-low-level-calls
-        (bool success, bytes memory returndata) = address(token).call(data);
-        require(success, "SafeERC20: low-level call failed");
-
-        if (returndata.length > 0) {
-            // Return data is optional
-            // solhint-disable-next-line max-line-length
-            require(abi.decode(returndata, (bool)), "SafeERC20: ERC20 operation did not succeed");
-        }
-    }
-}
-
-// File: contracts/lib/ReentrancyGuard.sol
-
-
-/**
- * @title ReentrancyGuard
- * @author DODO Breeder
- *
- * @notice Protect functions from Reentrancy Attack
- */
-contract ReentrancyGuard {
-    // https://solidity.readthedocs.io/en/latest/control-structures.html?highlight=zero-state#scoping-and-declarations
-    // zero-state of _ENTERED_ is false
-    bool private _ENTERED_;
-
-    modifier preventReentrant() {
-        require(!_ENTERED_, "REENTRANT");
-        _ENTERED_ = true;
-        _;
-        _ENTERED_ = false;
-    }
-}
-
-// File: contracts/DODOStablePool/impl/DSPStorage.sol
-
-
-
-contract DSPStorage is ReentrancyGuard {
-    using SafeMath for uint256;
-
-    bool internal _DSP_INITIALIZED_;
     bool public _IS_OPEN_TWAP_ = false;
-    
+
+    bool internal _DVM_INITIALIZED_;
+
     // ============ Core Address ============
 
     address public _MAINTAINER_;
@@ -818,12 +816,8 @@ contract DSPStorage is ReentrancyGuard {
     uint112 public _BASE_RESERVE_;
     uint112 public _QUOTE_RESERVE_;
     uint32 public _BLOCK_TIMESTAMP_LAST_;
-    
-    uint256 public _BASE_PRICE_CUMULATIVE_LAST_;
 
-    uint112 public _BASE_TARGET_;
-    uint112 public _QUOTE_TARGET_;
-    uint32 public _RState_;
+    uint256 public _BASE_PRICE_CUMULATIVE_LAST_;
 
     // ============ Shares (ERC20) ============
 
@@ -839,17 +833,16 @@ contract DSPStorage is ReentrancyGuard {
 
     bytes32 public DOMAIN_SEPARATOR;
     // keccak256("Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)");
-    bytes32 public constant PERMIT_TYPEHASH =
-        0x6e71edae12b1b97f4d1f60370fef10105fa2faae0126114a169c64845d6126c9;
+    bytes32 public constant PERMIT_TYPEHASH = 0x6e71edae12b1b97f4d1f60370fef10105fa2faae0126114a169c64845d6126c9;
     mapping(address => uint256) public nonces;
 
     // ============ Variables for Pricing ============
 
-    IFeeRateModel public _MT_FEE_RATE_MODEL_;
-
     uint256 public _LP_FEE_RATE_;
+    IFeeRateModel public _MT_FEE_RATE_MODEL_;
     uint256 public _K_;
     uint256 public _I_;
+
 
     // ============ Helper Functions ============
 
@@ -858,15 +851,15 @@ contract DSPStorage is ReentrancyGuard {
         state.K = _K_;
         state.B = _BASE_RESERVE_;
         state.Q = _QUOTE_RESERVE_;
-        state.B0 = _BASE_TARGET_; // will be calculated in adjustedTarget
-        state.Q0 = _QUOTE_TARGET_;
-        state.R = PMMPricing.RState(_RState_);
+        state.B0 = 0; // will be calculated in adjustedTarget
+        state.Q0 = 0;
+        state.R = PMMPricing.RState.ABOVE_ONE;
         PMMPricing.adjustedTarget(state);
     }
 
-    function getPMMStateForCall()
-        external
-        view
+    function getPMMStateForCall() 
+        external 
+        view 
         returns (
             uint256 i,
             uint256 K,
@@ -892,12 +885,11 @@ contract DSPStorage is ReentrancyGuard {
     }
 }
 
-// File: contracts/DODOStablePool/impl/DSPVault.sol
+// File: contracts/DODOVendingMachine/impl/DVMVault.sol
 
 
 
-
-contract DSPVault is DSPStorage {
+contract DVMVault is DVMStorage {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
 
@@ -918,11 +910,7 @@ contract DSPVault is DSPStorage {
         quoteReserve = _QUOTE_RESERVE_;
     }
 
-    function getUserFeeRate(address user)
-        external
-        view
-        returns (uint256 lpFeeRate, uint256 mtFeeRate)
-    {
+    function getUserFeeRate(address user) external view returns (uint256 lpFeeRate, uint256 mtFeeRate) {
         lpFeeRate = _LP_FEE_RATE_;
         mtFeeRate = _MT_FEE_RATE_MODEL_.getFeeRate(user);
     }
@@ -938,7 +926,7 @@ contract DSPVault is DSPStorage {
     }
 
     // ============ TWAP UPDATE ===========
-
+    
     function _twapUpdate() internal {
         uint32 blockTimestamp = uint32(block.timestamp % 2**32);
         uint32 timeElapsed = blockTimestamp - _BLOCK_TIMESTAMP_LAST_;
@@ -955,7 +943,7 @@ contract DSPVault is DSPStorage {
         _BASE_RESERVE_ = uint112(baseReserve);
         _QUOTE_RESERVE_ = uint112(quoteReserve);
 
-        if (_IS_OPEN_TWAP_) _twapUpdate();
+        if(_IS_OPEN_TWAP_) _twapUpdate();
     }
 
     function _sync() internal {
@@ -969,24 +957,12 @@ contract DSPVault is DSPStorage {
             _QUOTE_RESERVE_ = uint112(quoteBalance);
         }
 
-        if (_IS_OPEN_TWAP_) _twapUpdate();
+        if(_IS_OPEN_TWAP_) _twapUpdate();
     }
+
 
     function sync() external preventReentrant {
         _sync();
-    }
-
-    function correctRState() public {
-        if (_RState_ == uint32(PMMPricing.RState.BELOW_ONE) && _BASE_RESERVE_<_BASE_TARGET_) {
-          _RState_ = uint32(PMMPricing.RState.ONE);
-          _BASE_TARGET_ = _BASE_RESERVE_;
-          _QUOTE_TARGET_ = _QUOTE_RESERVE_;
-        }
-        if (_RState_ == uint32(PMMPricing.RState.ABOVE_ONE) && _QUOTE_RESERVE_<_QUOTE_TARGET_) {
-          _RState_ = uint32(PMMPricing.RState.ONE);
-          _BASE_TARGET_ = _BASE_RESERVE_;
-          _QUOTE_TARGET_ = _QUOTE_RESERVE_;
-        }
     }
 
     // ============ Asset Out ============
@@ -1079,7 +1055,7 @@ contract DSPVault is DSPStorage {
     }
 
     function _mint(address user, uint256 value) internal {
-        require(value > 1000, "MINT_AMOUNT_NOT_ENOUGH");
+        require(value > 1000, "MINT_INVALID");
         _SHARES_[user] = _SHARES_[user].add(value);
         totalSupply = totalSupply.add(value);
         emit Mint(user, value);
@@ -1094,7 +1070,7 @@ contract DSPVault is DSPStorage {
     }
 
     // ============================ Permit ======================================
-
+    
     function permit(
         address owner,
         address spender,
@@ -1104,28 +1080,20 @@ contract DSPVault is DSPStorage {
         bytes32 r,
         bytes32 s
     ) external {
-        require(deadline >= block.timestamp, "DODO_DSP_LP: EXPIRED");
-        bytes32 digest =
-            keccak256(
-                abi.encodePacked(
-                    "\x19\x01",
-                    DOMAIN_SEPARATOR,
-                    keccak256(
-                        abi.encode(
-                            PERMIT_TYPEHASH,
-                            owner,
-                            spender,
-                            value,
-                            nonces[owner]++,
-                            deadline
-                        )
-                    )
+        require(deadline >= block.timestamp, "DODO_DVM_LP: EXPIRED");
+        bytes32 digest = keccak256(
+            abi.encodePacked(
+                "\x19\x01",
+                DOMAIN_SEPARATOR,
+                keccak256(
+                    abi.encode(PERMIT_TYPEHASH, owner, spender, value, nonces[owner]++, deadline)
                 )
-            );
+            )
+        );
         address recoveredAddress = ecrecover(digest, v, r, s);
         require(
             recoveredAddress != address(0) && recoveredAddress == owner,
-            "DODO_DSP_LP: INVALID_SIGNATURE"
+            "DODO_DVM_LP: INVALID_SIGNATURE"
         );
         _approve(owner, spender, value);
     }
@@ -1157,20 +1125,13 @@ interface IDODOCallee {
         bytes calldata data
     ) external;
 
-    function DSPFlashLoanCall(
-        address sender,
-        uint256 baseAmount,
-        uint256 quoteAmount,
-        bytes calldata data
-    ) external;
-
     function CPCancelCall(
         address sender,
         uint256 amount,
         bytes calldata data
     ) external;
 
-	function CPClaimBidCall(
+    function CPClaimBidCall(
         address sender,
         uint256 baseAmount,
         uint256 quoteAmount,
@@ -1178,10 +1139,10 @@ interface IDODOCallee {
     ) external;
 }
 
-// File: contracts/DODOStablePool/impl/DSPTrader.sol
+// File: contracts/DODOVendingMachine/impl/DVMTrader.sol
 
 
-contract DSPTrader is DSPVault {
+contract DVMTrader is DVMVault {
     using SafeMath for uint256;
 
     // ============ Events ============
@@ -1195,31 +1156,27 @@ contract DSPTrader is DSPVault {
         address receiver
     );
 
-    event DODOFlashLoan(address borrower, address assetTo, uint256 baseAmount, uint256 quoteAmount);
-
-    event RChange(PMMPricing.RState newRState);
+    event DODOFlashLoan(
+        address borrower,
+        address assetTo,
+        uint256 baseAmount,
+        uint256 quoteAmount
+    );
 
     // ============ Trade Functions ============
 
-    function sellBase(address to) external preventReentrant returns (uint256 receiveQuoteAmount) {
+    function sellBase(address to)
+        external
+        preventReentrant
+        returns (uint256 receiveQuoteAmount)
+    {
         uint256 baseBalance = _BASE_TOKEN_.balanceOf(address(this));
         uint256 baseInput = baseBalance.sub(uint256(_BASE_RESERVE_));
         uint256 mtFee;
-        uint256 newBaseTarget;
-        PMMPricing.RState newRState;
-        (receiveQuoteAmount, mtFee, newRState, newBaseTarget) = querySellBase(tx.origin, baseInput);
+        (receiveQuoteAmount, mtFee) = querySellBase(tx.origin, baseInput);
 
         _transferQuoteOut(to, receiveQuoteAmount);
         _transferQuoteOut(_MAINTAINER_, mtFee);
-
-        // update TARGET
-        if (_RState_ != uint32(newRState)) {
-            require(newBaseTarget <= uint112(-1), "OVERFLOW");
-            _BASE_TARGET_ = uint112(newBaseTarget);
-            _RState_ = uint32(newRState);
-            emit RChange(newRState);
-        }
-
         _setReserve(baseBalance, _QUOTE_TOKEN_.balanceOf(address(this)));
 
         emit DODOSwap(
@@ -1232,28 +1189,18 @@ contract DSPTrader is DSPVault {
         );
     }
 
-    function sellQuote(address to) external preventReentrant returns (uint256 receiveBaseAmount) {
+    function sellQuote(address to)
+        external
+        preventReentrant
+        returns (uint256 receiveBaseAmount)
+    {
         uint256 quoteBalance = _QUOTE_TOKEN_.balanceOf(address(this));
         uint256 quoteInput = quoteBalance.sub(uint256(_QUOTE_RESERVE_));
         uint256 mtFee;
-        uint256 newQuoteTarget;
-        PMMPricing.RState newRState;
-        (receiveBaseAmount, mtFee, newRState, newQuoteTarget) = querySellQuote(
-            tx.origin,
-            quoteInput
-        );
+        (receiveBaseAmount, mtFee) = querySellQuote(tx.origin, quoteInput);
 
         _transferBaseOut(to, receiveBaseAmount);
         _transferBaseOut(_MAINTAINER_, mtFee);
-
-        // update TARGET
-        if (_RState_ != uint32(newRState)) {
-            require(newQuoteTarget <= uint112(-1), "OVERFLOW");
-            _QUOTE_TARGET_ = uint112(newQuoteTarget);
-            _RState_ = uint32(newRState);
-            emit RChange(newRState);
-        }
-
         _setReserve(_BASE_TOKEN_.balanceOf(address(this)), quoteBalance);
 
         emit DODOSwap(
@@ -1276,39 +1223,24 @@ contract DSPTrader is DSPVault {
         _transferQuoteOut(assetTo, quoteAmount);
 
         if (data.length > 0)
-            IDODOCallee(assetTo).DSPFlashLoanCall(msg.sender, baseAmount, quoteAmount, data);
+            IDODOCallee(assetTo).DVMFlashLoanCall(msg.sender, baseAmount, quoteAmount, data);
 
         uint256 baseBalance = _BASE_TOKEN_.balanceOf(address(this));
         uint256 quoteBalance = _QUOTE_TOKEN_.balanceOf(address(this));
-
+        
         // no input -> pure loss
         require(
             baseBalance >= _BASE_RESERVE_ || quoteBalance >= _QUOTE_RESERVE_,
             "FLASH_LOAN_FAILED"
         );
 
-        // sell quote case
-        // quote input + base output
+        // sell quote
         if (baseBalance < _BASE_RESERVE_) {
             uint256 quoteInput = quoteBalance.sub(uint256(_QUOTE_RESERVE_));
-            (
-                uint256 receiveBaseAmount,
-                uint256 mtFee,
-                PMMPricing.RState newRState,
-                uint256 newQuoteTarget
-            ) = querySellQuote(tx.origin, quoteInput); // revert if quoteBalance<quoteReserve
-            require(
-                uint256(_BASE_RESERVE_).sub(baseBalance) <= receiveBaseAmount,
-                "FLASH_LOAN_FAILED"
-            );
+            (uint256 receiveBaseAmount, uint256 mtFee) = querySellQuote(tx.origin, quoteInput);
+            require(uint256(_BASE_RESERVE_).sub(baseBalance) <= receiveBaseAmount, "FLASH_LOAN_FAILED");
 
             _transferBaseOut(_MAINTAINER_, mtFee);
-            if (_RState_ != uint32(newRState)) {
-                require(newQuoteTarget <= uint112(-1), "OVERFLOW");
-                _QUOTE_TARGET_ = uint112(newQuoteTarget);
-                _RState_ = uint32(newRState);
-                emit RChange(newRState);
-            }
             emit DODOSwap(
                 address(_QUOTE_TOKEN_),
                 address(_BASE_TOKEN_),
@@ -1319,28 +1251,13 @@ contract DSPTrader is DSPVault {
             );
         }
 
-        // sell base case
-        // base input + quote output
+        // sell base
         if (quoteBalance < _QUOTE_RESERVE_) {
             uint256 baseInput = baseBalance.sub(uint256(_BASE_RESERVE_));
-            (
-                uint256 receiveQuoteAmount,
-                uint256 mtFee,
-                PMMPricing.RState newRState,
-                uint256 newBaseTarget
-            ) = querySellBase(tx.origin, baseInput); // revert if baseBalance<baseReserve
-            require(
-                uint256(_QUOTE_RESERVE_).sub(quoteBalance) <= receiveQuoteAmount,
-                "FLASH_LOAN_FAILED"
-            );
+            (uint256 receiveQuoteAmount, uint256 mtFee) = querySellBase(tx.origin, baseInput);
+            require(uint256(_QUOTE_RESERVE_).sub(quoteBalance) <= receiveQuoteAmount, "FLASH_LOAN_FAILED");
 
             _transferQuoteOut(_MAINTAINER_, mtFee);
-            if (_RState_ != uint32(newRState)) {
-                require(newBaseTarget <= uint112(-1), "OVERFLOW");
-                _BASE_TARGET_ = uint112(newBaseTarget);
-                _RState_ = uint32(newRState);
-                emit RChange(newRState);
-            }
             emit DODOSwap(
                 address(_BASE_TOKEN_),
                 address(_QUOTE_TOKEN_),
@@ -1352,7 +1269,7 @@ contract DSPTrader is DSPVault {
         }
 
         _sync();
-
+        
         emit DODOFlashLoan(msg.sender, assetTo, baseAmount, quoteAmount);
     }
 
@@ -1361,15 +1278,9 @@ contract DSPTrader is DSPVault {
     function querySellBase(address trader, uint256 payBaseAmount)
         public
         view
-        returns (
-            uint256 receiveQuoteAmount,
-            uint256 mtFee,
-            PMMPricing.RState newRState,
-            uint256 newBaseTarget
-        )
+        returns (uint256 receiveQuoteAmount, uint256 mtFee)
     {
-        PMMPricing.PMMState memory state = getPMMState();
-        (receiveQuoteAmount, newRState) = PMMPricing.sellBaseToken(state, payBaseAmount);
+        (receiveQuoteAmount, ) = PMMPricing.sellBaseToken(getPMMState(), payBaseAmount);
 
         uint256 lpFeeRate = _LP_FEE_RATE_;
         uint256 mtFeeRate = _MT_FEE_RATE_MODEL_.getFeeRate(trader);
@@ -1377,21 +1288,14 @@ contract DSPTrader is DSPVault {
         receiveQuoteAmount = receiveQuoteAmount
             .sub(DecimalMath.mulFloor(receiveQuoteAmount, lpFeeRate))
             .sub(mtFee);
-        newBaseTarget = state.B0;
     }
 
     function querySellQuote(address trader, uint256 payQuoteAmount)
         public
         view
-        returns (
-            uint256 receiveBaseAmount,
-            uint256 mtFee,
-            PMMPricing.RState newRState,
-            uint256 newQuoteTarget
-        )
+        returns (uint256 receiveBaseAmount, uint256 mtFee)
     {
-        PMMPricing.PMMState memory state = getPMMState();
-        (receiveBaseAmount, newRState) = PMMPricing.sellQuoteToken(state, payQuoteAmount);
+        (receiveBaseAmount, ) = PMMPricing.sellQuoteToken(getPMMState(), payQuoteAmount);
 
         uint256 lpFeeRate = _LP_FEE_RATE_;
         uint256 mtFeeRate = _MT_FEE_RATE_MODEL_.getFeeRate(trader);
@@ -1399,14 +1303,13 @@ contract DSPTrader is DSPVault {
         receiveBaseAmount = receiveBaseAmount
             .sub(DecimalMath.mulFloor(receiveBaseAmount, lpFeeRate))
             .sub(mtFee);
-        newQuoteTarget = state.Q0;
     }
 }
 
-// File: contracts/DODOStablePool/impl/DSPFunding.sol
+// File: contracts/DODOVendingMachine/impl/DVMFunding.sol
 
 
-contract DSPFunding is DSPVault {
+contract DVMFunding is DVMVault {
     // ============ Events ============
 
     event BuyShares(address to, uint256 increaseShares, uint256 totalShares);
@@ -1438,20 +1341,17 @@ contract DSPFunding is DSPVault {
         // But May Happen，reserve >0 But totalSupply = 0
         if (totalSupply == 0) {
             // case 1. initial supply
-            shares = quoteBalance < DecimalMath.mulFloor(baseBalance, _I_)
-                ? DecimalMath.divFloor(quoteBalance, _I_)
-                : baseBalance;
-            _BASE_TARGET_ = uint112(shares);
-            _QUOTE_TARGET_ = uint112(DecimalMath.mulFloor(shares, _I_));
+            require(baseBalance >= 10**3, "INSUFFICIENT_LIQUIDITY_MINED");
+            shares = baseBalance; // 以免出现balance很大但shares很小的情况
+        } else if (baseReserve > 0 && quoteReserve == 0) {
+            // case 2. supply when quote reserve is 0
+            shares = baseInput.mul(totalSupply).div(baseReserve);
         } else if (baseReserve > 0 && quoteReserve > 0) {
-            // case 2. normal case
+            // case 3. normal case
             uint256 baseInputRatio = DecimalMath.divFloor(baseInput, baseReserve);
             uint256 quoteInputRatio = DecimalMath.divFloor(quoteInput, quoteReserve);
             uint256 mintRatio = quoteInputRatio < baseInputRatio ? quoteInputRatio : baseInputRatio;
             shares = DecimalMath.mulFloor(totalSupply, mintRatio);
-
-            _BASE_TARGET_ = uint112(uint256(_BASE_TARGET_).add(DecimalMath.mulFloor(uint256(_BASE_TARGET_), mintRatio)));
-            _QUOTE_TARGET_ = uint112(uint256(_QUOTE_TARGET_).add(DecimalMath.mulFloor(uint256(_QUOTE_TARGET_), mintRatio)));
         }
         _mint(to, shares);
         _setReserve(baseBalance, quoteBalance);
@@ -1469,16 +1369,12 @@ contract DSPFunding is DSPVault {
     ) external preventReentrant returns (uint256 baseAmount, uint256 quoteAmount) {
         require(deadline >= block.timestamp, "TIME_EXPIRED");
         require(shareAmount <= _SHARES_[msg.sender], "DLP_NOT_ENOUGH");
-
         uint256 baseBalance = _BASE_TOKEN_.balanceOf(address(this));
         uint256 quoteBalance = _QUOTE_TOKEN_.balanceOf(address(this));
         uint256 totalShares = totalSupply;
 
         baseAmount = baseBalance.mul(shareAmount).div(totalShares);
         quoteAmount = quoteBalance.mul(shareAmount).div(totalShares);
-
-        _BASE_TARGET_ = uint112(uint256(_BASE_TARGET_).sub(uint256(_BASE_TARGET_).mul(shareAmount).divCeil(totalShares)));
-        _QUOTE_TARGET_ = uint112(uint256(_QUOTE_TARGET_).sub(uint256(_QUOTE_TARGET_).mul(shareAmount).divCeil(totalShares)));
 
         require(
             baseAmount >= baseMinAmount && quoteAmount >= quoteMinAmount,
@@ -1491,7 +1387,6 @@ contract DSPFunding is DSPVault {
         _sync();
 
         if (data.length > 0) {
-            //Same as DVM 
             IDODOCallee(to).DVMSellShareCall(
                 msg.sender,
                 shareAmount,
@@ -1505,18 +1400,17 @@ contract DSPFunding is DSPVault {
     }
 }
 
-// File: contracts/DODOStablePool/impl/DSP.sol
-
+// File: contracts/DODOVendingMachine/impl/DVM.sol
 
 
 
 /**
- * @title DODO StablePool
+ * @title DODO VendingMachine
  * @author DODO Breeder
  *
- * @notice DODOStablePool initialization
+ * @notice DODOVendingMachine initialization
  */
-contract DSP is DSPTrader, DSPFunding {
+contract DVM is DVMTrader, DVMFunding {
     function init(
         address maintainer,
         address baseTokenAddress,
@@ -1527,8 +1421,8 @@ contract DSP is DSPTrader, DSPFunding {
         uint256 k,
         bool isOpenTWAP
     ) external {
-        require(!_DSP_INITIALIZED_, "DSP_INITIALIZED");
-        _DSP_INITIALIZED_ = true;
+        require(!_DVM_INITIALIZED_, "DVM_INITIALIZED");
+        _DVM_INITIALIZED_ = true;
         
         require(baseTokenAddress != quoteTokenAddress, "BASE_QUOTE_CAN_NOT_BE_SAME");
         _BASE_TOKEN_ = IERC20(baseTokenAddress);
@@ -1545,7 +1439,7 @@ contract DSP is DSPTrader, DSPFunding {
         _MAINTAINER_ = maintainer;
 
         _IS_OPEN_TWAP_ = isOpenTWAP;
-        if (isOpenTWAP) _BLOCK_TIMESTAMP_LAST_ = uint32(block.timestamp % 2**32);
+        if(isOpenTWAP) _BLOCK_TIMESTAMP_LAST_ = uint32(block.timestamp % 2**32);
 
         string memory connect = "_";
         string memory suffix = "DLP";
@@ -1585,8 +1479,8 @@ contract DSP is DSPTrader, DSPFunding {
     }
 
     // ============ Version Control ============
-
+    
     function version() external pure returns (string memory) {
-        return "DSP 1.0.1";
+        return "DVM 1.0.2";
     }
 }
